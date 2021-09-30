@@ -3,6 +3,8 @@ from math import inf
 import random
 import csv
 
+from cs506.sim import euclidean_dist
+
 
 def point_avg(points):
     """
@@ -11,7 +13,11 @@ def point_avg(points):
     
     Returns a new point which is the center of all the points.
     """
-    raise NotImplementedError()
+    x = [point[0] for point in points]
+    y = [point[1] for point in points]
+    num_points = len(points)
+
+    return (sum(x) / num_points, sum(y) / num_points)
 
 
 def update_centers(dataset, assignments):
@@ -21,7 +27,20 @@ def update_centers(dataset, assignments):
     Compute the center for each of the assigned groups.
     Return `k` centers in a list
     """
-    raise NotImplementedError()
+    k = 0
+    for assignment in assignments: # find out what k is so i can create the right length group list
+        if assignment > k:
+            k = assignment
+
+    groups = [[] for i in range(k)] 
+
+    for i in range(len(dataset)):
+        groups[assignments[i]].append(dataset[i])
+
+    centers = []
+    for group in groups:
+        centers.append(point_avg(group))
+    return centers
 
 def assign_points(data_points, centers):
     """
@@ -43,17 +62,18 @@ def distance(a, b):
     """
     Returns the Euclidean distance between a and b
     """
-    raise NotImplementedError()
+    return euclidean_dist(a,b)
 
 def distance_squared(a, b):
-    raise NotImplementedError()
+    return distance(a,b)**2
 
 def generate_k(dataset, k):
     """
     Given `data_set`, which is an array of arrays,
     return a random set of k points from the data_set
     """
-    raise NotImplementedError()
+    shuffled_set = random.shuffle(dataset)
+    return shuffled_set[:k]
 
 def cost_function(clustering):
     raise NotImplementedError()
